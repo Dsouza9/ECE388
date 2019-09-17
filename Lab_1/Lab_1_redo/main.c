@@ -5,7 +5,7 @@
  * Author : pimen
  */ 
 
-void mydelay(int x);
+void mydelay();
 
 #include <avr/io.h>
 #define F_CPU 16000000UL
@@ -17,15 +17,11 @@ volatile int one_hz = 50;
 volatile int five_hz = 10;
 volatile int ten_hz = 5;
 int Delay_Time;
-volatile int Delay_Select = 1;
-//int Flag = 0;
+volatile int Delay_Select = 3;
 int On = 0;
 
 #define Led 5
 #define button 7
-
-uint8_t portbhistory = 0xFF; 
-
 
 
 int main(void)
@@ -45,15 +41,15 @@ int main(void)
     while (1) 
     {		
 		PORTB &= ~(1<< Led); //Turn led off
-		mydelay(Delay_Time);
+		mydelay();
 		PORTB |= 1 << Led; //turn led on
-		mydelay(Delay_Time);
+		mydelay();
     }
 }
 
-void mydelay(int x)
+void mydelay()
 {
-	for(int i = 0; i < x; i++)
+	for(int i = 0; i < Delay_Time; i++)
 	{
 		_delay_ms(10);
 	}
@@ -64,35 +60,21 @@ ISR(PCINT0_vect)
 {
 	if(PINB != (PINB & ~(1<<button))) //button goes high
 	{	
-		switch(Delay_Select)
-		{
-			case 0:
-				Delay_Time = one_hz;
-				break;
-			case 1:
-				Delay_Time = five_hz;
-				break;
-			case 2:
-				Delay_Time = ten_hz;
-				break;
-		}	
-		/*
-		if(Delay_Select == 0)
+		if(Delay_Select == 1)
 		{
 			Delay_Time = one_hz;
-			//Delay_Select = 2;
+			Delay_Select = 2;
 		}
-		else if (Delay_Select == 1)
+		else if (Delay_Select == 2)
 		{
 			Delay_Time = five_hz;
-			//Delay_Select = 3;
+			Delay_Select = 3;
 		}
-		else if(Delay_Select == 2)
+		else if(Delay_Select == 3)
 		{
 			Delay_Time = ten_hz;
-			//Delay_Select = 1;
-		}*/
-		Delay_Select = (Delay_Select + 1) % 3;
+			Delay_Select = 1;
+		}
 	}
 }
 
