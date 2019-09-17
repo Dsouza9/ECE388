@@ -1,5 +1,5 @@
 /*
- * Lab_1_redo.c
+ * Lab_1.c
  *
  * Created: 9/12/2019 12:31:49 PM
  * Author : pimen
